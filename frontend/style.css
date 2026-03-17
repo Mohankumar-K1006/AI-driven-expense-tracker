@@ -1,0 +1,112 @@
+/* ── Reset & box model ── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── Base ── */
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;          /* breathing room on tiny screens */
+}
+
+/* ── Card ── */
+.container {
+    background: white;
+    padding: 32px 28px;
+    border-radius: 10px;
+    width: 100%;            /* fluid by default */
+    max-width: 400px;       /* caps growth on large screens */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.container h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+/* ── Form elements ── */
+input {
+    width: 100%;
+    padding: 10px 12px;
+    margin: 8px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus {
+    border-color: #007bff;
+}
+
+button {
+    width: 100%;
+    padding: 11px;
+    margin-top: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* ── Inline message ── */
+.message {
+    font-size: 0.875rem;
+    min-height: 20px;
+    margin-top: 4px;
+}
+
+.message.error {
+    color: #d9534f;
+}
+
+.message.success {
+    color: #28a745;
+}
+
+/* ── Links ── */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.container > p {
+    margin-top: 16px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* ── Small phones (<= 360 px) ── */
+@media (max-width: 360px) {
+    .container {
+        padding: 24px 16px;
+    }
+
+    .container h2 {
+        font-size: 1.25rem;
+    }
+}
+

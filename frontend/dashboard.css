@@ -1,0 +1,146 @@
+/* ── Reset & box model ── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── Base ── */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f3f3f3;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* top-align so form isn't clipped on short screens */
+    padding: 20px 16px;
+}
+
+/* ── App wrapper ── */
+.app-container {
+    width: 100%;
+    max-width: 420px;
+    min-height: 500px;
+    background: #f7f7f7;
+    border-radius: 25px;
+    padding: 24px 20px 16px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* ── Header ── */
+.header {
+    text-align: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.close-btn {
+    position: absolute;
+    left: 0;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* ── Form ── */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1;
+}
+
+input,
+select {
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    background: #e8e3db;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    width: 100%;
+    transition: box-shadow 0.2s;
+}
+
+input:focus,
+select:focus {
+    box-shadow: 0 0 0 2px #c4a97d;
+}
+
+/* ── Inline message ── */
+.msg {
+    font-size: 0.85rem;
+    min-height: 18px;
+    text-align: center;
+}
+
+.msg.error {
+    color: #d9534f;
+}
+
+.msg.success {
+    color: #28a745;
+}
+
+/* ── Save button ── */
+.save-btn {
+    padding: 14px;
+    border-radius: 25px;
+    border: none;
+    background: #e5b84c;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+}
+
+.save-btn:hover {
+    background: #d9a93f;
+}
+
+/* ── Bottom nav ── */
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+    font-size: 12px;
+    margin-top: 20px;
+}
+
+.bottom-nav div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #6b5b3e;
+    cursor: pointer;
+    gap: 3px;
+}
+
+.nav-icon {
+    font-size: 20px;
+}
+
+/* ── Very small phones (≤ 360px) ── */
+@media (max-width: 360px) {
+    .app-container {
+        padding: 18px 12px 12px;
+        border-radius: 16px;
+    }
+
+    .bottom-nav {
+        font-size: 10px;
+    }
+}

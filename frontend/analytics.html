@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics – ExpenseTracker</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="navbar.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .page-content {
+            padding: calc(var(--navbar-h) + 28px) 20px 48px;
+        }
+
+        .analytics-wrap {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* ── Summary Cards ── */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .card-stat {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 24px 20px;
+            text-align: center;
+            border-top: 4px solid var(--primary);
+            transition: box-shadow .2s, transform .2s;
+        }
+
+        .card-stat:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .card-stat.income {
+            border-color: var(--success);
+        }
+
+        .card-stat.expense {
+            border-color: var(--danger);
+        }
+
+        .card-stat.balance {
+            border-color: var(--primary);
+        }
+
+        .card-stat h3 {
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 8px;
+        }
+
+        .card-stat .value {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .card-stat.income .value {
+            color: var(--success);
+        }
+
+        .card-stat.expense .value {
+            color: var(--danger);
+        }
+
+        .card-stat.balance .value {
+            color: var(--primary);
+        }
+
+        /* ── Charts Grid ── */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .chart-box {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 28px 24px;
+        }
+
+        .chart-box h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pie-wrap {
+            max-width: 320px;
+            margin: 0 auto;
+        }
+
+        .empty-msg {
+            text-align: center;
+            padding: 48px 16px;
+            color: var(--text-muted);
+            font-size: .9rem;
+        }
+
+        .empty-msg .emoji {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 700px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-content">
+        <div class="analytics-wrap">
+
+            <h1 class="section-title" style="margin-bottom:24px">📊 Expense Analytics</h1>
+
+            <!-- Summary Cards -->
+            <div class="cards">
+                <div class="card-stat income">
+                    <h3>📈 Total Income</h3>
+                    <p class="value" id="income">₹ 0</p>
+                </div>
+                <div class="card-stat expense">
+                    <h3>📉 Total Expense</h3>
+                    <p class="value" id="expense">₹ 0</p>
+                </div>
+                <div class="card-stat balance">
+                    <h3>💰 Balance</h3>
+                    <p class="value" id="balance">₹ 0</p>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+
+                <!-- Pie Chart -->
+                <div class="chart-box">
+                    <h3>🍩 Spending by Category</h3>
+                    <div class="pie-wrap">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <div class="empty-msg" id="pieEmpty" style="display:none">
+                        <div class="emoji">📭</div>
+                        <p>No expense data yet</p>
+                    </div>
+                </div>
+
+                <!-- Bar Chart -->
+                <div class="chart-box">
+                    <h3>📅 Monthly Expense Trend</h3>
+                    <canvas id="barChart"></canvas>
+                    <div class="empty-msg" id="barEmpty" style="display:none">
+                        <div class="emoji">📭</div>
+                        <p>No monthly data yet</p>
+                    </div>
+                </div>
+
+                <!-- Income vs Expense Chart -->
+                <div class="chart-box" style="grid-column: 1 / -1;">
+                    <h3>⚖️ Income vs Expenses</h3>
+                    <div style="height: 300px; position: relative;">
+                        <canvas id="compChart"></canvas>
+                    </div>
+                    <div class="empty-msg" id="compEmpty" style="display:none">
+                        <div class="emoji">📭</div>
+                        <p>No transactions available</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="navbar.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "login.html";
+
+        /* ── Load Summary ── */
+        async function loadSummary() {
+            try {
+                const res = await fetch("http://localhost:5000/api/analytics/summary", {
+                    headers: { Authorization: token }
+                });
+                const data = await res.json();
+                document.getElementById("income").innerText = "₹ " + (data.income || 0).toLocaleString();
+                document.getElementById("expense").innerText = "₹ " + (data.expense || 0).toLocaleString();
+                document.getElementById("balance").innerText = "₹ " + (data.balance || 0).toLocaleString();
+            } catch {
+                console.error("Failed to load summary");
+            }
+        }
+
+        /* ── Pie Chart (Category-wise) ── */
+        async function loadCategoryChart() {
+            try {
+                const res = await fetch("http://localhost:5000/api/analytics/category", {
+                    headers: { Authorization: token }
+                });
+                const data = await res.json();
+
+                if (!data.length) {
+                    document.getElementById("pieChart").style.display = "none";
+                    document.getElementById("pieEmpty").style.display = "block";
+                    return;
+                }
+
+                const labels = data.map(d => d._id);
+                const amounts = data.map(d => d.total);
+
+                new Chart(document.getElementById("pieChart"), {
+                    type: "pie",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: amounts,
+                            backgroundColor: [
+                                '#6366f1', '#06b6d4', '#10b981', '#f59e0b',
+                                '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6',
+                                '#f97316', '#84cc16'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 14,
+                                    usePointStyle: true,
+                                    font: { family: "'Inter', sans-serif", size: 12 }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch {
+                document.getElementById("pieChart").style.display = "none";
+                document.getElementById("pieEmpty").style.display = "block";
+            }
+        }
+
+        /* ── Bar Chart (Monthly Trend) ── */
+        async function loadMonthlyChart() {
+            try {
+                const res = await fetch("http://localhost:5000/api/analytics/monthly", {
+                    headers: { Authorization: token }
+                });
+                const data = await res.json();
+
+                if (!data.length) {
+                    document.getElementById("barChart").style.display = "none";
+                    document.getElementById("barEmpty").style.display = "block";
+                    return;
+                }
+
+                new Chart(document.getElementById("barChart"), {
+                    type: "bar",
+                    data: {
+                        labels: data.map(d => d.month),
+                        datasets: [{
+                            label: "Expenses (₹)",
+                            data: data.map(d => d.expense),
+                            backgroundColor: '#6366f1',
+                            borderRadius: 6,
+                            maxBarThickness: 48
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: v => '₹' + v.toLocaleString()
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch {
+                 document.getElementById("barChart").style.display = "none";
+                 document.getElementById("barEmpty").style.display = "block";
+             }
+         }
+
+        /* ── Grouped Bar Chart (Income vs Expense) ── */
+        async function loadComparisonChart() {
+            try {
+                const res = await fetch("http://localhost:5000/api/analytics/income-vs-expense", {
+                    headers: { Authorization: token }
+                });
+                const data = await res.json();
+
+                if (!data.length) {
+                    document.getElementById("compChart").style.display = "none";
+                    document.getElementById("compEmpty").style.display = "block";
+                    return;
+                }
+
+                new Chart(document.getElementById("compChart"), {
+                    type: "bar",
+                    data: {
+                        labels: data.map(d => d.month),
+                        datasets: [
+                            {
+                                label: "Income",
+                                data: data.map(d => d.income),
+                                backgroundColor: '#10b981',
+                                borderRadius: 4,
+                            },
+                            {
+                                label: "Expense",
+                                data: data.map(d => d.expense),
+                                backgroundColor: '#ef4444',
+                                borderRadius: 4,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top' }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: { callback: v => '₹' + v.toLocaleString() }
+                            }
+                        }
+                    }
+                });
+            } catch {
+                document.getElementById("compChart").style.display = "none";
+                document.getElementById("compEmpty").style.display = "block";
+            }
+        }
+
+        /* ── Load All ── */
+        loadSummary();
+        loadCategoryChart();
+        loadMonthlyChart();
+        loadComparisonChart();
+    </script>
+
+</body>
+
+</html>

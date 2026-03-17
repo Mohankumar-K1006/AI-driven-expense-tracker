@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile – ExpenseTracker</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="navbar.css">
+    <style>
+        .page-content {
+            padding: calc(var(--navbar-h) + 28px) 20px 48px;
+        }
+
+        .profile-wrap {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        /* ── Profile header ── */
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: var(--radius-lg);
+            padding: 36px 32px;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin: 0 auto 14px;
+            border: 3px solid rgba(255, 255, 255, .4);
+        }
+
+        .profile-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-header .profile-email {
+            font-size: .9rem;
+            opacity: .85;
+        }
+
+        .profile-header .profile-role {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 3px 14px;
+            border-radius: 99px;
+            font-size: .75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            background: rgba(255, 255, 255, .2);
+        }
+
+        /* ── Settings card ── */
+        .profile-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 32px 28px;
+        }
+
+        .profile-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .profile-form .form-group {
+            margin-bottom: 0;
+        }
+
+        .profile-form .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 500px) {
+            .profile-form {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                padding: 28px 20px;
+            }
+
+            .profile-card {
+                padding: 24px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-content">
+        <div class="profile-wrap">
+
+            <h1 class="section-title" style="margin-bottom:24px">👤 My Profile</h1>
+
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar">👤</div>
+                <h2 id="userName">—</h2>
+                <p class="profile-email" id="userEmail">—</p>
+                <span class="profile-role" id="userRole">user</span>
+            </div>
+
+            <!-- Financial Settings -->
+            <div class="profile-card">
+                <h3>💰 Financial Settings</h3>
+                <form id="profileForm" class="profile-form">
+                    <div class="form-group">
+                        <label for="income">Monthly Income (₹)</label>
+                        <input type="number" id="income" placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="savingsGoal">Savings Goal (₹)</label>
+                        <input type="number" id="savingsGoal" placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="targetExpense">Target Expense Limit (₹)</label>
+                        <input type="number" id="targetExpense" placeholder="0" min="0">
+                    </div>
+                    <div class="form-group"></div>
+                    <div class="form-actions">
+                        <div id="message" class="message"></div>
+                        <button type="submit" class="btn btn-primary btn-full">💾 Save Profile</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="navbar.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "login.html";
+
+        /* ── Load Profile ── */
+        async function loadProfile() {
+            try {
+                const res = await fetch("http://localhost:5000/api/profile", {
+                    headers: { "Authorization": token }
+                });
+                const data = await res.json();
+
+                document.getElementById("userName").textContent = data.name || "—";
+                document.getElementById("userEmail").textContent = data.email || "—";
+                document.getElementById("userRole").textContent = data.role || "user";
+                document.getElementById("income").value = data.income || "";
+                document.getElementById("savingsGoal").value = data.savingsGoal || "";
+                document.getElementById("targetExpense").value = data.targetExpense || "";
+            } catch {
+                console.error("Failed to load profile");
+            }
+        }
+
+        loadProfile();
+
+        /* ── Save Profile ── */
+        document.getElementById("profileForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const msgEl = document.getElementById("message");
+            msgEl.className = "message";
+            msgEl.textContent = "";
+
+            const btn = this.querySelector("button[type=submit]");
+            btn.disabled = true;
+            btn.textContent = "Saving…";
+
+            try {
+                const res = await fetch("http://localhost:5000/api/profile", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": token
+                    },
+                    body: JSON.stringify({
+                        income: Number(document.getElementById("income").value) || 0,
+                        savingsGoal: Number(document.getElementById("savingsGoal").value) || 0,
+                        targetExpense: Number(document.getElementById("targetExpense").value) || 0
+                    })
+                });
+
+                if (res.ok) {
+                    msgEl.classList.add("success");
+                    msgEl.textContent = "✔ Profile updated successfully!";
+                } else {
+                    const d = await res.json();
+                    msgEl.classList.add("error");
+                    msgEl.textContent = d.message || "Failed to save profile.";
+                }
+            } catch {
+                msgEl.classList.add("error");
+                msgEl.textContent = "Network error. Check your connection.";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "💾 Save Profile";
+            }
+        });
+    </script>
+
+</body>
+
+</html>

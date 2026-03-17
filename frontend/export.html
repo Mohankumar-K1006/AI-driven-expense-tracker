@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export Data – ExpenseTracker</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="navbar.css">
+    <style>
+        .page-content {
+            padding: calc(var(--navbar-h) + 28px) 20px 48px;
+        }
+
+        .export-wrap {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .export-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 36px 32px;
+            text-align: center;
+        }
+
+        .export-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .export-card p {
+            font-size: .95rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .export-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 32px 20px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all .2s;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .export-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .export-btn .icon {
+            font-size: 3rem;
+        }
+
+        .export-btn .title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .export-btn .desc {
+            font-size: .85rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 500px) {
+            .export-options {
+                grid-template-columns: 1fr;
+            }
+            .export-card {
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-content">
+        <div class="export-wrap">
+
+            <h1 class="section-title">📥 Export Financial Data</h1>
+
+            <div class="export-card">
+                <h2>Download Your Records</h2>
+                <p>Keep a local backup of your transaction history and reports.</p>
+
+                <div class="export-options">
+                    
+                    <a href="#" id="csvBtn" class="export-btn">
+                        <div class="icon">📊</div>
+                        <div class="title">Export to CSV</div>
+                        <div class="desc">Best for Excel/Sheets</div>
+                    </a>
+
+                    <a href="#" id="pdfBtn" class="export-btn">
+                        <div class="icon">📄</div>
+                        <div class="title">Export to PDF</div>
+                        <div class="desc">Best for Printing/Summary</div>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="navbar.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "login.html";
+
+        function downloadFile(url, filename) {
+            fetch(url, {
+                headers: { "Authorization": token }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Export failed");
+                return res.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            })
+            .catch(err => {
+                alert("Failed to export data: " + err.message);
+            });
+        }
+
+        document.getElementById("csvBtn").addEventListener("click", (e) => {
+            e.preventDefault();
+            downloadFile("http://localhost:5000/api/export/csv", "transactions.csv");
+        });
+
+        document.getElementById("pdfBtn").addEventListener("click", (e) => {
+            e.preventDefault();
+            downloadFile("http://localhost:5000/api/export/pdf", "transactions.pdf");
+        });
+    </script>
+
+</body>
+
+</html>

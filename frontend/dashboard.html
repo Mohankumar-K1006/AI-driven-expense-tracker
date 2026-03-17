@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard – ExpenseTracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="navbar.css">
+    <style>
+        .page-content {
+            padding: calc(var(--navbar-h) + 28px) 20px 48px;
+        }
+
+        .dash-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        /* summary card spans full width */
+        .summary-banner {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #fff;
+            border-radius: var(--radius-lg);
+            padding: 28px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .summary-banner h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            opacity: .9;
+            margin-bottom: 4px;
+        }
+
+        .summary-banner .big-num {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .summary-stats {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat .label {
+            font-size: .8rem;
+            opacity: .8;
+            margin-bottom: 2px;
+        }
+
+        .stat .val {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        /* form & history cards span full width */
+        .form-card,
+        .history-card {
+            grid-column: 1 / -1;
+        }
+
+        .form-card h3,
+        .history-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .form-row .span-full {
+            grid-column: 1 / -1;
+        }
+
+        /* ── Transaction history list ── */
+        .tx-list {
+            list-style: none;
+        }
+
+        .tx-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            gap: 12px;
+        }
+
+        .tx-item:last-child {
+            border-bottom: none;
+        }
+
+        .tx-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .tx-info .tx-desc {
+            font-weight: 600;
+            font-size: .95rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tx-info .tx-meta {
+            font-size: .8rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tx-amount {
+            font-weight: 700;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .tx-amount.income {
+            color: var(--success);
+        }
+
+        .tx-amount.expense {
+            color: var(--danger);
+        }
+
+        .tx-delete {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            transition: background .15s;
+            color: var(--text-muted);
+        }
+
+        .tx-delete:hover {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        .empty-tx {
+            text-align: center;
+            padding: 32px 16px;
+            color: var(--text-muted);
+            font-size: .9rem;
+        }
+
+        @media (max-width: 540px) {
+            .dash-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-content">
+        <div class="dash-grid">
+
+            <!-- Summary Banner -->
+            <div class="summary-banner">
+                <div>
+                    <h2>Total Balance</h2>
+                    <div class="big-num" id="balanceAmt">₹ —</div>
+                </div>
+                <div class="summary-stats">
+                    <div class="stat">
+                        <div class="label">📈 Income</div>
+                        <div class="val" id="totalIncome">₹ —</div>
+                    </div>
+                    <div class="stat">
+                        <div class="label">📉 Expenses</div>
+                        <div class="val" id="totalExpense">₹ —</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="card form-card">
+                <h3>📊 Analytics</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    <div>
+                        <h4 style="text-align:center; color:var(--text-muted); margin-bottom: 10px;">Category Spending
+                        </h4>
+                        <div style="max-width: 250px; margin: 0 auto;">
+                            <canvas id="dashPieChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="text-align:center; color:var(--text-muted); margin-bottom: 10px;">Monthly Trend</h4>
+                        <div>
+                            <canvas id="dashBarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Transaction -->
+            <div class="card form-card">
+                <h3>➕ Add Transaction</h3>
+                <form id="transactionForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="amount">Amount (₹)</label>
+                            <input type="number" id="amount" placeholder="0.00" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="date">Date</label>
+                            <input type="date" id="date">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <input type="text" id="description" placeholder="e.g. Lunch at cafe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="account">Type</label>
+                            <select id="account">
+                                <option value="expense">💸 Expense</option>
+                                <option value="income">💰 Income</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">Category</label>
+                            <select id="category">
+                                <option value="">Select category</option>
+                                <option>Food</option>
+                                <option>Travel</option>
+                                <option>Shopping</option>
+                                <option>Rent</option>
+                                <option>Utilities</option>
+                                <option>Entertainment</option>
+                                <option>Salary</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group span-full">
+                            <div id="message" class="message"></div>
+                            <input type="hidden" id="editTxId">
+                            <button type="submit" id="submitTxBtn" class="btn btn-primary btn-full">Save Transaction</button>
+                            <button type="button" id="cancelEditBtn" class="btn btn-outline btn-full" style="display:none; margin-top:10px;">Cancel Edit</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="card history-card">
+                <h3>📋 Recent Transactions</h3>
+                <ul class="tx-list" id="txList">
+                    <li class="empty-tx">Loading transactions…</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="navbar.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "login.html";
+
+        /* Set today as default date */
+        document.getElementById("date").valueAsDate = new Date();
+
+        /* ── Load Summary ── */
+        async function loadSummary() {
+            try {
+                const res = await fetch("http://localhost:5000/api/transactions/summary", {
+                    headers: { "Authorization": token }
+                });
+                const data = await res.json();
+                document.getElementById("balanceAmt").textContent = "₹ " + (data.balance || 0).toLocaleString();
+                document.getElementById("totalIncome").textContent = "₹ " + (data.totalIncome || 0).toLocaleString();
+                document.getElementById("totalExpense").textContent = "₹ " + (data.totalExpense || 0).toLocaleString();
+            } catch {
+                console.error("Failed to load summary");
+            }
+        }
+
+        /* ── Load Transactions ── */
+        async function loadTransactions() {
+            try {
+                const res = await fetch("http://localhost:5000/api/transactions/all", {
+                    headers: { "Authorization": token }
+                });
+                const transactions = await res.json();
+                const list = document.getElementById("txList");
+
+                if (!transactions.length) {
+                    list.innerHTML = '<li class="empty-tx">No transactions yet. Add one above!</li>';
+                    return;
+                }
+
+                list.innerHTML = "";
+                transactions.forEach(tx => {
+                    const dateStr = new Date(tx.date).toLocaleDateString("en-IN", {
+                        day: "numeric", month: "short", year: "numeric"
+                    });
+                    const isIncome = tx.type === "income";
+                    list.innerHTML += `
+                    <li class="tx-item">
+                        <div class="tx-info">
+                            <span class="tx-desc">${tx.description || tx.category}</span>
+                            <span class="tx-meta">
+                                <span>${tx.category}</span>
+                                <span>•</span>
+                                <span>${dateStr}</span>
+                            </span>
+                        </div>
+                        <span class="tx-amount ${tx.type}">${isIncome ? '+' : '-'}₹${tx.amount.toLocaleString()}</span>
+                        <div style="display:flex; gap:6px;">
+                            <button class="tx-delete" onclick='editTx(${JSON.stringify(tx).replace(/'/g, "&apos;")})' title="Edit">✏️</button>
+                            <button class="tx-delete" onclick="deleteTx('${tx._id}')" title="Delete">🗑️</button>
+                        </div>
+                    </li>`;
+                });
+            } catch {
+                document.getElementById("txList").innerHTML =
+                    '<li class="empty-tx">Failed to load transactions.</li>';
+            }
+        }
+
+        /* ── Edit Transaction ── */
+        function editTx(tx) {
+            document.getElementById("editTxId").value = tx._id;
+            document.getElementById("amount").value = tx.amount;
+            document.getElementById("date").value = tx.date.split("T")[0];
+            document.getElementById("description").value = tx.description || "";
+            document.getElementById("account").value = tx.type;
+            document.getElementById("category").value = tx.category;
+
+            const submitBtn = document.getElementById("submitTxBtn");
+            const cancelBtn = document.getElementById("cancelEditBtn");
+            submitBtn.textContent = "Update Transaction";
+            cancelBtn.style.display = "block";
+            
+            // Scroll to form and highlight it
+            const form = document.getElementById("transactionForm");
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            form.style.boxShadow = "0 0 0 3px var(--primary-light)";
+            setTimeout(() => {
+                form.style.boxShadow = "none";
+            }, 1000);
+        }
+
+        /* ── Cancel Edit ── */
+        document.getElementById("cancelEditBtn").addEventListener("click", () => {
+            const form = document.getElementById("transactionForm");
+            form.reset();
+            document.getElementById("date").valueAsDate = new Date();
+            document.getElementById("editTxId").value = "";
+            document.getElementById("submitTxBtn").textContent = "Save Transaction";
+            document.getElementById("cancelEditBtn").style.display = "none";
+        });
+
+        /* ── Delete Transaction ── */
+        async function deleteTx(id) {
+            if (!confirm("Delete this transaction?")) return;
+            try {
+                await fetch(`http://localhost:5000/api/transactions/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": token }
+                });
+                loadSummary();
+                loadTransactions();
+            } catch {
+                alert("Failed to delete transaction.");
+            }
+        }
+
+        /* ── Form submit ── */
+        document.getElementById("transactionForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const msgEl = document.getElementById("message");
+            msgEl.className = "message";
+            msgEl.textContent = "";
+
+            const btn = document.getElementById("submitTxBtn");
+            const isEditing = !!document.getElementById("editTxId").value;
+            btn.disabled = true;
+            btn.textContent = isEditing ? "Updating…" : "Saving…";
+
+            const txData = {
+                type: document.getElementById("account").value,
+                category: document.getElementById("category").value,
+                amount: Number(document.getElementById("amount").value),
+                description: document.getElementById("description").value,
+                date: document.getElementById("date").value
+            };
+
+            try {
+                let url = "http://localhost:5000/api/transactions/add";
+                let method = "POST";
+                
+                if (isEditing) {
+                    const id = document.getElementById("editTxId").value;
+                    url = `http://localhost:5000/api/transactions/${id}`;
+                    method = "PUT";
+                }
+
+                const res = await fetch(url, {
+                    method: method,
+                    headers: { "Content-Type": "application/json", "Authorization": token },
+                    body: JSON.stringify(txData)
+                });
+
+                if (res.ok) {
+                    msgEl.classList.add("success");
+                    msgEl.textContent = isEditing ? "✔ Transaction updated!" : "✔ Transaction saved!";
+                    this.reset();
+                    document.getElementById("date").valueAsDate = new Date();
+                    document.getElementById("editTxId").value = "";
+                    document.getElementById("submitTxBtn").textContent = "Save Transaction";
+                    document.getElementById("cancelEditBtn").style.display = "none";
+                    loadSummary();
+                    loadTransactions();
+                    loadCharts(); // Update charts too
+                } else {
+                    const d = await res.json();
+                    msgEl.classList.add("error");
+                    msgEl.textContent = d.message || "Failed to save.";
+                }
+            } catch {
+                msgEl.classList.add("error");
+                msgEl.textContent = "Network error. Try again.";
+            } finally {
+                btn.disabled = false;
+                if (!document.getElementById("editTxId").value) {
+                     btn.textContent = "Save Transaction";
+                }
+            }
+        });
+
+        /* ── Load Charts ── */
+        async function loadCharts() {
+            try {
+                // Fetch Category Data
+                const catRes = await fetch("http://localhost:5000/api/analytics/category", {
+                    headers: { "Authorization": token }
+                });
+                const catData = await catRes.json();
+
+                if (catData.length > 0) {
+                    const labels = catData.map(d => d._id || d.category);
+                    const amounts = catData.map(d => d.total || d.amount);
+
+                    new Chart(document.getElementById("dashPieChart"), {
+                        type: "doughnut",
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: amounts,
+                                backgroundColor: ['#6366f1', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#84cc16'],
+                                borderWidth: 2, borderColor: '#fff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } } }
+                        }
+                    });
+                }
+
+                // Fetch Monthly Trend
+                const monRes = await fetch("http://localhost:5000/api/analytics/monthly", {
+                    headers: { "Authorization": token }
+                });
+                const monData = await monRes.json();
+
+                if (monData.length > 0) {
+                    new Chart(document.getElementById("dashBarChart"), {
+                        type: "bar",
+                        data: {
+                            labels: monData.map(d => d.month),
+                            datasets: [{
+                                label: "Expenses",
+                                data: monData.map(d => d.expense),
+                                backgroundColor: '#6366f1',
+                                borderRadius: 4,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: { legend: { display: false } },
+                            scales: { y: { beginAtZero: true, ticks: { callback: v => '₹' + v } } }
+                        }
+                    });
+                }
+            } catch (err) {
+                console.error("Failed to load charts", err);
+            }
+        }
+
+        /* ── Initial load ── */
+        loadSummary();
+        loadTransactions();
+        loadCharts();
+    </script>
+</body>
+
+</html>

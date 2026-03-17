@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget – ExpenseTracker</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="navbar.css">
+    <style>
+        .page-content {
+            padding: calc(var(--navbar-h) + 28px) 20px 48px;
+        }
+
+        .budget-wrap {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        /* Top summary row */
+        .summary-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .summary-tile {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 20px 18px;
+            text-align: center;
+            border-top: 4px solid var(--primary);
+        }
+
+        .summary-tile.income-tile {
+            border-color: var(--success);
+        }
+
+        .summary-tile.expense-tile {
+            border-color: var(--danger);
+        }
+
+        .summary-tile.remain-tile {
+            border-color: var(--warning);
+        }
+
+        .summary-tile .tile-label {
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 6px;
+        }
+
+        .summary-tile .tile-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* Category grid */
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .cat-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 20px;
+            transition: box-shadow .2s;
+        }
+
+        .cat-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .cat-card .cat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .cat-card .cat-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+        }
+
+        .cat-card .cat-pct {
+            font-size: .8rem;
+            font-weight: 600;
+        }
+
+        .cat-card .cat-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: .8rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state .emoji {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .empty-state a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        @media (max-width: 540px) {
+            .summary-row {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .summary-row .remain-tile {
+                grid-column: 1 / -1;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .summary-row {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-row .remain-tile {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-content">
+        <div class="budget-wrap">
+
+            <div
+                style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+                <h1 class="section-title" style="margin:0">📊 Monthly Budget</h1>
+                <a href="setBudget.html" class="btn btn-primary">⚙️ Set Budget</a>
+            </div>
+
+            <!-- Summary tiles -->
+            <div class="summary-row">
+                <div class="summary-tile income-tile">
+                    <div class="tile-label">Total Budget</div>
+                    <div class="tile-val" id="totalBudget">₹ —</div>
+                </div>
+                <div class="summary-tile expense-tile">
+                    <div class="tile-label">Total Spent</div>
+                    <div class="tile-val" id="totalSpent">₹ —</div>
+                </div>
+                <div class="summary-tile remain-tile">
+                    <div class="tile-label">Remaining</div>
+                    <div class="tile-val" id="totalRemaining">₹ —</div>
+                </div>
+            </div>
+
+            <!-- Category cards -->
+            <div class="cat-grid" id="categories">
+                <div class="empty-state">
+                    <div class="emoji">⏳</div>
+                    <p>Loading budget data…</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="navbar.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "login.html";
+
+        async function loadBudget() {
+            try {
+                const res = await fetch("http://localhost:5000/api/budget/analysis", {
+                    headers: { "Authorization": token }
+                });
+                const data = await res.json();
+
+                let totalBudget = 0, totalSpent = 0;
+                data.categories.forEach(c => { totalBudget += c.limit; totalSpent += c.spent; });
+                const remaining = totalBudget - totalSpent;
+
+                document.getElementById("totalBudget").textContent = "₹ " + totalBudget.toLocaleString();
+                document.getElementById("totalSpent").textContent = "₹ " + totalSpent.toLocaleString();
+                document.getElementById("totalRemaining").textContent = "₹ " + remaining.toLocaleString();
+
+                const container = document.getElementById("categories");
+                if (!data.categories.length) {
+                    container.innerHTML = `<div class="empty-state">
+                    <div class="emoji">💡</div>
+                    <p>No budget set yet.<br><a href="setBudget.html">Set your budget →</a></p>
+                </div>`;
+                    return;
+                }
+
+                container.innerHTML = "";
+                data.categories.forEach(cat => {
+                    const pct = cat.limit ? Math.min((cat.spent / cat.limit) * 100, 100) : 0;
+                    const exceeded = cat.remaining < 0;
+                    const color = exceeded ? "var(--danger)" : pct > 75 ? "var(--warning)" : "var(--success)";
+                    container.innerHTML += `
+                <div class="cat-card">
+                    <div class="cat-header">
+                        <span class="cat-name">${cat.category}</span>
+                        <span class="cat-pct" style="color:${color}">${pct.toFixed(0)}%</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill ${exceeded ? 'danger' : ''}"
+                             style="width:${pct}%;background:${color}"></div>
+                    </div>
+                    <div class="cat-details">
+                        <span>Spent: ₹${cat.spent.toLocaleString()}</span>
+                        <span>Limit: ₹${cat.limit.toLocaleString()}</span>
+                    </div>
+                    ${exceeded ? '<p style="color:var(--danger);font-size:.8rem;margin-top:6px;font-weight:600">⚠ Limit exceeded by ₹' + Math.abs(cat.remaining).toLocaleString() + '</p>' : ''}
+                </div>`;
+                });
+            } catch {
+                document.getElementById("categories").innerHTML =
+                    '<div class="empty-state"><div class="emoji">⚠️</div><p>Failed to load budget data.</p></div>';
+            }
+        }
+
+        loadBudget();
+    </script>
+</body>
+
+</html>

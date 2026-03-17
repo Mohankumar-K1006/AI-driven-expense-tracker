@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set Budget – ExpenseTracker</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="navbar.css">
+    <style>
+        .page-content {
+            padding: calc(var(--navbar-h) + 28px) 20px 48px;
+        }
+
+        .set-budget-wrap {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .budget-form-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 32px 28px;
+        }
+
+        .budget-form-card h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .budget-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .budget-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .budget-input-group label {
+            font-size: .875rem;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .budget-input-group input {
+            padding: 11px 14px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            font-size: .95rem;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .budget-input-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 500px) {
+            .budget-inputs {
+                grid-template-columns: 1fr;
+            }
+
+            .budget-form-card {
+                padding: 24px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-content">
+        <div class="set-budget-wrap">
+
+            <div
+                style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+                <h1 class="section-title" style="margin:0">⚙️ Set Monthly Budget</h1>
+                <a href="budget.html" class="btn btn-outline">📊 View Budget</a>
+            </div>
+
+            <div class="budget-form-card">
+                <h2>💡 Allocate your monthly limits</h2>
+                <form id="budgetForm">
+                    <div class="budget-inputs">
+
+                        <div class="budget-input-group">
+                            <label for="food">🍔 Food</label>
+                            <input type="number" id="food" placeholder="₹ 0" min="0">
+                        </div>
+
+                        <div class="budget-input-group">
+                            <label for="rent">🏠 Rent</label>
+                            <input type="number" id="rent" placeholder="₹ 0" min="0">
+                        </div>
+
+                        <div class="budget-input-group">
+                            <label for="transport">🚗 Transportation</label>
+                            <input type="number" id="transport" placeholder="₹ 0" min="0">
+                        </div>
+
+                        <div class="budget-input-group">
+                            <label for="utilities">💡 Utilities</label>
+                            <input type="number" id="utilities" placeholder="₹ 0" min="0">
+                        </div>
+
+                        <div class="budget-input-group">
+                            <label for="shopping">🛍️ Shopping</label>
+                            <input type="number" id="shopping" placeholder="₹ 0" min="0">
+                        </div>
+
+                        <div class="budget-input-group">
+                            <label for="entertainment">🎬 Entertainment</label>
+                            <input type="number" id="entertainment" placeholder="₹ 0" min="0">
+                        </div>
+
+                        <div class="form-actions">
+                            <div id="message" class="message"></div>
+                            <button type="submit" class="btn btn-primary btn-full">💾 Save Budget</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="navbar.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+        if (!token) window.location.href = "login.html";
+
+        /* ── Pre-fill existing budget ── */
+        async function prefillBudget() {
+            try {
+                const res = await fetch("http://localhost:5000/api/budget/analysis", {
+                    headers: { "Authorization": token }
+                });
+                const data = await res.json();
+                if (data.categories && data.categories.length) {
+                    const map = {};
+                    data.categories.forEach(c => { map[c.category] = c.limit; });
+                    if (map["Food"]) document.getElementById("food").value = map["Food"];
+                    if (map["Rent"]) document.getElementById("rent").value = map["Rent"];
+                    if (map["Transportation"]) document.getElementById("transport").value = map["Transportation"];
+                    if (map["Utilities"]) document.getElementById("utilities").value = map["Utilities"];
+                    if (map["Shopping"]) document.getElementById("shopping").value = map["Shopping"];
+                    if (map["Entertainment"]) document.getElementById("entertainment").value = map["Entertainment"];
+                }
+            } catch {
+                /* silently ignore – form stays empty */
+            }
+        }
+        prefillBudget();
+
+        document.getElementById("budgetForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const msgEl = document.getElementById("message");
+            msgEl.className = "message";
+            msgEl.textContent = "";
+
+            const btn = e.target.querySelector("button[type=submit]");
+            btn.disabled = true;
+            btn.textContent = "Saving…";
+
+            const categories = [
+                { name: "Food", limit: Number(document.getElementById("food").value) },
+                { name: "Rent", limit: Number(document.getElementById("rent").value) },
+                { name: "Transportation", limit: Number(document.getElementById("transport").value) },
+                { name: "Utilities", limit: Number(document.getElementById("utilities").value) },
+                { name: "Shopping", limit: Number(document.getElementById("shopping").value) },
+                { name: "Entertainment", limit: Number(document.getElementById("entertainment").value) }
+            ];
+
+            try {
+                const res = await fetch("http://localhost:5000/api/budget/set", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": token },
+                    body: JSON.stringify({ categories })
+                });
+                if (res.ok) {
+                    msgEl.classList.add("success");
+                    msgEl.textContent = "✔ Budget saved! Redirecting…";
+                    setTimeout(() => window.location.href = "budget.html", 1000);
+                } else {
+                    const d = await res.json();
+                    msgEl.classList.add("error");
+                    msgEl.textContent = d.message || "Failed to save budget.";
+                }
+            } catch {
+                msgEl.classList.add("error");
+                msgEl.textContent = "Network error. Check your connection.";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "💾 Save Budget";
+            }
+        });
+    </script>
+</body>
+
+</html>

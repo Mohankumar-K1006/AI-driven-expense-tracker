@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Forum – ExpenseTracker</title>
+    <link rel="stylesheet" href="common.css">
+    <link rel="stylesheet" href="navbar.css">
+    <style>
+        .page-content {
+            padding: calc(var(--navbar-h) + 28px) 20px 48px;
+        }
+
+        .forum-wrap {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* ── Create Post Card ── */
+        .create-post-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 24px;
+            margin-bottom: 32px;
+            border-top: 4px solid var(--primary);
+        }
+
+        .create-post-card h2 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .create-post-card form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .create-post-card textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* ── Feed ── */
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .post-card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            padding: 24px;
+            transition: box-shadow .2s;
+        }
+
+        .post-card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-name {
+            font-weight: 700;
+            font-size: .95rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .author-role {
+            font-size: .7rem;
+            background: var(--border);
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .post-time {
+            font-size: .8rem;
+            color: var(--text-muted);
+        }
+
+        .post-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .post-body {
+            font-size: .95rem;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 16px;
+            white-space: pre-wrap;
+        }
+
+        .post-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: .9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color .2s;
+        }
+
+        .action-btn:hover {
+            color: var(--primary);
+        }
+
+        .action-btn.liked {
+            color: var(--danger);
+        }
+
+        /* ── Comments Section ── */
+        .comments-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--border);
+            display: none;
+        }
+
+        .comments-section.open {
+            display: block;
+        }
+
+        .comment-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .comment-item {
+            background: var(--bg);
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .comment-author {
+            font-size: .85rem;
+            font-weight: 700;
+        }
+
+        .comment-time {
+            font-size: .75rem;
+            color: var(--text-muted);
+        }
+
+        .comment-text {
+            font-size: .9rem;
+            color: var(--text);
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .comment-form input {
+            flex: 1;
+            padding: 10px 14px;
+        }
+
+        .comment-form button {
+            padding: 10px 16px;
+        }
+
+        .empty-feed {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-feed .emoji {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 500px) {
+            .post-card, .create-post-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="page-content">
+        <div class="forum-wrap">
+
+            <h1 class="section-title">💬 Community Forum</h1>
+            <p style="margin-top:-12px; margin-bottom: 24px; color: var(--text-muted); font-size: .95rem;">
+                Share financial tips, ask questions, and learn from others.
+            </p>
+
+            <!-- Create Post -->
+            <div class="create-post-card">
+                <h2>📝 Start a Discussion</h2>
+                <form id="postForm">
+                    <input type="text" id="postTitle" placeholder="Title of your post" required>
+                    <textarea id="postContent" placeholder="What do you want to share or ask?" required></textarea>
+                    <div id="postMessage" class="message"></div>
+                    <button type="submit" class="btn btn-primary" style="align-self: flex-end;">Post to Forum</button>
+                </form>
+            </div>
+
+            <!-- Feed -->
+            <div class="feed" id="feed">
+                <div class="empty-feed">
+                    <div class="emoji">⏳</div>
+                    <p>Loading discussions…</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="navbar.js"></script>
+    <script>
+        const token = localStorage.getItem("token");
+        const currentUserId = (() => {
+            try { return JSON.parse(atob(token.split('.')[1])).id; } catch { return null; }
+        })();
+
+        if (!token) window.location.href = "login.html";
+
+        /* ── Utility: Time Ago ── */
+        function timeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const seconds = Math.floor((now - date) / 1000);
+            
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + "d ago";
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + "h ago";
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + "m ago";
+            return "just now";
+        }
+
+        /* ── Load Feed ── */
+        async function loadFeed() {
+            try {
+                const res = await fetch("http://localhost:5000/api/forum", {
+                    headers: { "Authorization": token }
+                });
+                const posts = await res.json();
+                const feedEl = document.getElementById("feed");
+
+                if (!posts.length) {
+                    feedEl.innerHTML = `
+                        <div class="empty-feed">
+                            <div class="emoji">📭</div>
+                            <p>No discussions yet. Be the first to post!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                feedEl.innerHTML = "";
+                posts.forEach(post => {
+                    const hasLiked = post.likes.includes(currentUserId);
+                    const likeCount = post.likes.length;
+                    const commentCount = post.comments.length;
+                    const initial = (post.user && post.user.name) ? post.user.name.charAt(0).toUpperCase() : "?";
+                    const authorName = post.user ? post.user.name : "Unknown User";
+                    const authorRole = (post.user && post.user.role === "admin") ? '<span class="author-role">admin</span>' : '';
+
+                    let commentsHTML = post.comments.map(c => `
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <span class="comment-author">${c.name || "User"}</span>
+                                <span class="comment-time">${timeAgo(c.createdAt)}</span>
+                            </div>
+                            <div class="comment-text">${c.text}</div>
+                        </div>
+                    `).join("");
+
+                    if (!commentsHTML) commentsHTML = `<div class="text-muted text-small text-center" style="margin-bottom:12px">No comments yet.</div>`;
+
+                    feedEl.innerHTML += `
+                        <div class="post-card">
+                            <div class="post-header">
+                                <div class="post-author">
+                                    <div class="author-avatar">${initial}</div>
+                                    <div class="author-info">
+                                        <div class="author-name">${authorName} ${authorRole}</div>
+                                        <div class="post-time">${timeAgo(post.createdAt)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h3 class="post-title">${post.title}</h3>
+                            <div class="post-body">${post.content}</div>
+
+                            <div class="post-actions">
+                                <button class="action-btn ${hasLiked ? 'liked' : ''}" onclick="toggleLike('${post._id}', this)">
+                                    ${hasLiked ? '❤️' : '🤍'} <span class="like-cnt">${likeCount}</span>
+                                </button>
+                                <button class="action-btn" onclick="toggleComments('${post._id}')">
+                                    💬 <span>${commentCount}</span>
+                                </button>
+                            </div>
+
+                            <div class="comments-section" id="comments-${post._id}">
+                                <div class="comment-list" id="commentList-${post._id}">
+                                    ${commentsHTML}
+                                </div>
+                                <form class="comment-form" onsubmit="submitComment(event, '${post._id}')">
+                                    <input type="text" id="commentInput-${post._id}" placeholder="Write a comment..." required>
+                                    <button type="submit" class="btn btn-primary">Post</button>
+                                </form>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch {
+                document.getElementById("feed").innerHTML = `
+                    <div class="empty-feed">
+                        <div class="emoji">⚠️</div>
+                        <p>Failed to load forum feed.</p>
+                    </div>
+                `;
+            }
+        }
+
+        /* ── Submit Post ── */
+        document.getElementById("postForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const msgEl = document.getElementById("postMessage");
+            const btn = this.querySelector("button[type=submit]");
+            
+            btn.disabled = true;
+            btn.textContent = "Posting...";
+            msgEl.textContent = "";
+
+            try {
+                const res = await fetch("http://localhost:5000/api/forum", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": token },
+                    body: JSON.stringify({
+                        title: document.getElementById("postTitle").value,
+                        content: document.getElementById("postContent").value
+                    })
+                });
+
+                if (res.ok) {
+                    this.reset();
+                    loadFeed();
+                } else {
+                    const d = await res.json();
+                    msgEl.className = "message error";
+                    msgEl.textContent = d.message || "Failed to post.";
+                }
+            } catch {
+                msgEl.className = "message error";
+                msgEl.textContent = "Network error.";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Post to Forum";
+            }
+        });
+
+        /* ── Toggle Like ── */
+        async function toggleLike(postId, btnEl) {
+            try {
+                const res = await fetch(`http://localhost:5000/api/forum/${postId}/like`, {
+                    method: "PUT",
+                    headers: { "Authorization": token }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    btnEl.querySelector('.like-cnt').textContent = data.likes;
+                    if (data.liked) {
+                        btnEl.classList.add("liked");
+                        btnEl.innerHTML = `❤️ <span class="like-cnt">${data.likes}</span>`;
+                    } else {
+                        btnEl.classList.remove("liked");
+                        btnEl.innerHTML = `🤍 <span class="like-cnt">${data.likes}</span>`;
+                    }
+                }
+            } catch (e) {
+                console.error("Like failed", e);
+            }
+        }
+
+        /* ── Toggle Comments visibility ── */
+        function toggleComments(postId) {
+            const section = document.getElementById(`comments-${postId}`);
+            section.classList.toggle("open");
+        }
+
+        /* ── Submit Comment ── */
+        async function submitComment(e, postId) {
+            e.preventDefault();
+            const input = document.getElementById(`commentInput-${postId}`);
+            const btn = e.target.querySelector("button");
+            const text = input.value.trim();
+            if (!text) return;
+
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`http://localhost:5000/api/forum/${postId}/comment`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": token },
+                    body: JSON.stringify({ text })
+                });
+
+                if (res.ok) {
+                    // Reload entire feed to get fresh data (safest approach)
+                    loadFeed();
+                }
+            } catch (err) {
+                alert("Failed to post comment.");
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        /* ── Init ── */
+        loadFeed();
+    </script>
+</body>
+
+</html>

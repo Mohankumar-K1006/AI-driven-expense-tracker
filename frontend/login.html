@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login – ExpenseTracker</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f1f5f9 60%, #cffafe 100%);
+        }
+
+        .auth-wrapper {
+            display: flex;
+            width: 100%;
+            max-width: 900px;
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            min-height: 520px;
+        }
+
+        /* ── Left decorative panel ── */
+        .auth-panel {
+            flex: 1;
+            background: linear-gradient(140deg, var(--primary) 0%, var(--accent) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 36px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .auth-panel .brand {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+        }
+
+        .auth-panel h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .auth-panel p {
+            font-size: .95rem;
+            opacity: .88;
+            line-height: 1.7;
+        }
+
+        /* ── Right form panel ── */
+        .auth-form-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 48px 40px;
+        }
+
+        .auth-form-panel h1 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .auth-form-panel .sub {
+            font-size: .9rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        .auth-form-panel form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .auth-form-panel input {
+            padding: 13px 16px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            font-size: .95rem;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        .auth-form-panel input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .auth-form-panel .btn {
+            padding: 13px;
+            font-size: 1rem;
+            border-radius: var(--radius-sm);
+            margin-top: 4px;
+        }
+
+        .auth-footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: .9rem;
+            color: var(--text-muted);
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Responsive: stack on small screens ── */
+        @media (max-width: 640px) {
+            .auth-panel {
+                display: none;
+            }
+
+            .auth-form-panel {
+                padding: 36px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-wrapper">
+
+        <!-- Left decorative panel -->
+        <div class="auth-panel">
+            <div class="brand">💰</div>
+            <h2>ExpenseTracker</h2>
+            <p>Track your spending,<br>manage your budgets,<br>and reach your financial goals.</p>
+        </div>
+
+        <!-- Right form -->
+        <div class="auth-form-panel">
+            <h1>Welcome back 👋</h1>
+            <p class="sub">Sign in to your account</p>
+
+            <form id="loginForm">
+                <input type="email" id="email" placeholder="Email address" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <div id="message" class="message"></div>
+                <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+            </form>
+
+            <div class="auth-footer">
+                Don't have an account? <a href="register.html">Sign up</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+            const msgEl = document.getElementById("message");
+            msgEl.className = "message";
+            msgEl.textContent = "";
+
+            const btn = this.querySelector("button[type=submit]");
+            btn.disabled = true;
+            btn.textContent = "Signing in…";
+
+            try {
+                const res = await fetch("http://localhost:5000/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        email: document.getElementById("email").value,
+                        password: document.getElementById("password").value
+                    })
+                });
+                const data = await res.json();
+                if (data.token) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("userName", data.name || "");
+                    localStorage.setItem("userRole", data.role || "user");
+                    window.location.href = "dashboard.html";
+                } else {
+                    msgEl.classList.add("error");
+                    msgEl.textContent = data.message || "Login failed. Please try again.";
+                }
+            } catch {
+                msgEl.classList.add("error");
+                msgEl.textContent = "Network error. Check your connection.";
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Sign In";
+            }
+        });
+    </script>
+
+</body>
+
+</html>
