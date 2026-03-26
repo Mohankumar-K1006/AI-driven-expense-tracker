@@ -4,36 +4,35 @@
 
 /* ── CSS Variables ── */
 :root {
-    --primary: #4f46e5;
-    /* indigo */
-    --primary-dark: #3730a3;
-    --primary-light: #e0e7ff;
-    --accent: #06b6d4;
-    /* cyan  */
+    --primary: #6366f1;       /* vibrant indigo */
+    --primary-dark: #4f46e5;
+    --primary-light: rgba(99, 102, 241, 0.15);
+    
+    --accent: #14b8a6;        /* vibrant teal */
     --success: #10b981;
     --danger: #ef4444;
     --warning: #f59e0b;
 
-    --bg: #f1f5f9;
-    --surface: #ffffff;
-    --surface-2: #f8fafc;
-    --border: #e2e8f0;
+    --bg: #0f172a;            /* sleek dark slate */
+    --surface: #1e293b;       /* slightly lighter slate */
+    --surface-2: #334155;     /* mid slate */
+    --border: #334155;        /* dark border */
 
-    --text: #1e293b;
-    --text-muted: #64748b;
-    --text-light: #94a3b8;
+    --text: #f8fafc;          /* off-white text */
+    --text-muted: #94a3b8;    /* muted gray text */
+    --text-light: #cbd5e1;
 
     --radius-sm: 8px;
     --radius-md: 14px;
     --radius-lg: 20px;
     --radius-xl: 28px;
 
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, .08);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, .10);
-    --shadow-lg: 0 10px 32px rgba(0, 0, 0, .12);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+    --shadow-lg: 0 10px 32px rgba(0,0,0,0.5);
 
     --font: 'Inter', 'Segoe UI', system-ui, sans-serif;
-    --navbar-h: 64px;
+    --navbar-h: 68px;
 }
 
 /* ── Reset ── */
@@ -130,7 +129,7 @@ textarea {
     font-family: var(--font);
     font-size: .95rem;
     color: var(--text);
-    background: var(--surface);
+    background: var(--bg);
     outline: none;
     transition: border-color .2s, box-shadow .2s;
 }
@@ -139,7 +138,7 @@ input:focus,
 select:focus,
 textarea:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
 }
 
 /* ── Buttons ── */

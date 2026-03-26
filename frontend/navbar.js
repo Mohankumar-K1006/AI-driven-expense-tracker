@@ -19,7 +19,9 @@
 
             <!-- Brand -->
             <a href="dashboard.html" class="navbar-brand">
-                <div class="brand-icon">💰</div>
+                <div class="brand-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+                </div>
                 ExpenseTracker
             </a>
 
@@ -27,42 +29,42 @@
             <ul class="navbar-links">
                 <li>
                     <a href="dashboard.html" class="${isActive('dashboard.html')}">
-                        <span class="nav-icon">🏠</span> Dashboard
+                        Dashboard
                     </a>
                 </li>
                 <li>
                     <a href="budget.html" class="${isActive('budget.html')}">
-                        <span class="nav-icon">📊</span> Budget
+                        Budget
                     </a>
                 </li>
                 <li>
                     <a href="setBudget.html" class="${isActive('setBudget.html')}">
-                        <span class="nav-icon">⚙️</span> Set Budget
+                        Set Budget
                     </a>
                 </li>
                 <li>
                     <a href="savings.html" class="${isActive('savings.html')}">
-                        <span class="nav-icon">🎯</span> Savings
+                        Savings
                     </a>
                 </li>
                 <li>
                     <a href="analytics.html" class="${isActive('analytics.html')}">
-                        <span class="nav-icon">📈</span> Analytics
+                        Analytics
                     </a>
                 </li>
                 <li>
                     <a href="export.html" class="${isActive('export.html')}">
-                        <span class="nav-icon">📥</span> Export
+                        Export
                     </a>
                 </li>
                 <li>
                     <a href="forum.html" class="${isActive('forum.html')}">
-                        <span class="nav-icon">💬</span> Forum
+                        Forum
                     </a>
                 </li>
                 <li>
                     <a href="profile.html" class="${isActive('profile.html')}">
-                        <span class="nav-icon">👤</span> Profile
+                        Profile
                     </a>
                 </li>
             </ul>
@@ -70,7 +72,8 @@
             <!-- Right actions -->
             <div class="navbar-actions">
                 <button class="navbar-logout" id="logoutBtn" aria-label="Logout">
-                    🚪 Logout
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Logout
                 </button>
                 <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu" aria-expanded="false">
                     <span></span><span></span><span></span>
@@ -83,30 +86,33 @@
     <!-- Mobile menu -->
     <div class="mobile-menu" id="mobileMenu" role="menu">
         <a href="dashboard.html" class="${isActive('dashboard.html')}" role="menuitem">
-            <span>🏠</span> Dashboard
+            Dashboard
         </a>
         <a href="budget.html" class="${isActive('budget.html')}" role="menuitem">
-            <span>📊</span> Budget
+            Budget
         </a>
         <a href="setBudget.html" class="${isActive('setBudget.html')}" role="menuitem">
-            <span>⚙️</span> Set Budget
+            Set Budget
         </a>
         <a href="savings.html" class="${isActive('savings.html')}" role="menuitem">
-            <span>🎯</span> Savings
+            Savings
         </a>
         <a href="analytics.html" class="${isActive('analytics.html')}" role="menuitem">
-            <span>📈</span> Analytics
+            Analytics
         </a>
         <a href="export.html" class="${isActive('export.html')}" role="menuitem">
-            <span>📥</span> Export
+            Export
         </a>
         <a href="forum.html" class="${isActive('forum.html')}" role="menuitem">
-            <span>💬</span> Forum
+            Forum
         </a>
         <a href="profile.html" class="${isActive('profile.html')}" role="menuitem">
-            <span>👤</span> Profile
+            Profile
         </a>
-        <button class="mobile-menu-logout" id="mobileLogoutBtn">🚪 Logout</button>
+        <button class="mobile-menu-logout" id="mobileLogoutBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            Logout
+        </button>
     </div>
     `;
 

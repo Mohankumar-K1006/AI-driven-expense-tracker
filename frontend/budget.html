@@ -152,8 +152,8 @@
 
             <div
                 style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
-                <h1 class="section-title" style="margin:0">📊 Monthly Budget</h1>
-                <a href="setBudget.html" class="btn btn-primary">⚙️ Set Budget</a>
+                <h1 class="section-title" style="margin:0">Monthly Budget</h1>
+                <a href="setBudget.html" class="btn btn-primary">Set Budget</a>
             </div>
 
             <!-- Summary tiles -->
@@ -236,7 +236,7 @@
                 });
             } catch {
                 document.getElementById("categories").innerHTML =
-                    '<div class="empty-state"><div class="emoji">⚠️</div><p>Failed to load budget data.</p></div>';
+                    '<div class="empty-state"><div class="icon" style="color:var(--warning); margin-bottom:10px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div><p>Failed to load budget data.</p></div>';
             }
         }
 

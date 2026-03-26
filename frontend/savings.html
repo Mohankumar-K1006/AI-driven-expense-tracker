@@ -129,7 +129,7 @@
     <div class="page-content">
         <div class="savings-wrap">
 
-            <h1 class="section-title">🎯 Savings Goals</h1>
+            <h1 class="section-title">Savings Goals</h1>
 
             <!-- Create Goal Form -->
             <div class="goal-form-card">
@@ -236,7 +236,7 @@
 
                 if (!data.length) {
                     container.innerHTML = `<div class="empty-goals">
-                        <div class="emoji">🎯</div>
+                        <div class="emoji"></div>
                         <p>No goals yet. Create one above!</p>
                     </div>`;
                     return;
@@ -250,7 +250,7 @@
                     <div class="goal-card">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start;">
                             <h3 style="margin-bottom:10px;">${goal.title}</h3>
-                            <button class="btn btn-outline" style="padding:4px 8px; font-size:.8rem; margin:0;" onclick="deleteGoal('${goal._id}')" title="Delete Goal">🗑️</button>
+                            <button class="btn btn-outline" style="padding:4px 8px; font-size:.8rem; margin:0;" onclick="deleteGoal('${goal._id}')" title="Delete Goal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
                         </div>
                         <div class="goal-stats">
                             <span>Saved: ₹${goal.savedAmount.toLocaleString()}</span>
@@ -262,13 +262,13 @@
                         <div class="goal-pct">${goal.percentage}% completed</div>
                         ${goal.completed
                             ? '<div class="goal-achieved">🎉 Goal Achieved!</div>'
-                            : `<button class="btn btn-outline" onclick="addMoney('${goal._id}')">💰 Add Money</button>`
+                            : `<button class="btn btn-outline" onclick="addMoney('${goal._id}')">Add Money</button>`
                         }
                     </div>`;
                 });
             } catch {
                 document.getElementById("goals").innerHTML =
-                    '<div class="empty-goals"><div class="emoji">⚠️</div><p>Failed to load goals.</p></div>';
+                    '<div class="empty-goals"><div class="icon" style="color:var(--warning); margin-bottom:10px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div><p>Failed to load goals.</p></div>';
             }
         }
 

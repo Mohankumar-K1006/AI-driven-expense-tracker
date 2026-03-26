@@ -247,14 +247,14 @@
     <div class="page-content">
         <div class="forum-wrap">
 
-            <h1 class="section-title">💬 Community Forum</h1>
+            <h1 class="section-title">Community Forum</h1>
             <p style="margin-top:-12px; margin-bottom: 24px; color: var(--text-muted); font-size: .95rem;">
                 Share financial tips, ask questions, and learn from others.
             </p>
 
             <!-- Create Post -->
             <div class="create-post-card">
-                <h2>📝 Start a Discussion</h2>
+                <h2>Start a Discussion</h2>
                 <form id="postForm">
                     <input type="text" id="postTitle" placeholder="Title of your post" required>
                     <textarea id="postContent" placeholder="What do you want to share or ask?" required></textarea>
@@ -359,10 +359,10 @@
 
                             <div class="post-actions">
                                 <button class="action-btn ${hasLiked ? 'liked' : ''}" onclick="toggleLike('${post._id}', this)">
-                                    ${hasLiked ? '❤️' : '🤍'} <span class="like-cnt">${likeCount}</span>
+                                    ${hasLiked ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>' : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>'} <span class="like-cnt">${likeCount}</span>
                                 </button>
                                 <button class="action-btn" onclick="toggleComments('${post._id}')">
-                                    💬 <span>${commentCount}</span>
+                                    <span>${commentCount}</span>
                                 </button>
                             </div>
 
@@ -381,7 +381,7 @@
             } catch {
                 document.getElementById("feed").innerHTML = `
                     <div class="empty-feed">
-                        <div class="emoji">⚠️</div>
+                        <div class="icon" style="color:var(--warning); margin-bottom:10px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
                         <p>Failed to load forum feed.</p>
                     </div>
                 `;
@@ -437,7 +437,7 @@
                     btnEl.querySelector('.like-cnt').textContent = data.likes;
                     if (data.liked) {
                         btnEl.classList.add("liked");
-                        btnEl.innerHTML = `❤️ <span class="like-cnt">${data.likes}</span>`;
+                        btnEl.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> <span class="like-cnt">${data.likes}</span>`;
                     } else {
                         btnEl.classList.remove("liked");
                         btnEl.innerHTML = `🤍 <span class="like-cnt">${data.likes}</span>`;

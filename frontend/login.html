@@ -105,6 +105,42 @@
             margin-top: 4px;
         }
 
+        .auth-form-panel .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: -8px;
+            margin-bottom: 4px;
+        }
+
+        .auth-form-panel .show-password-label {
+            font-size: .85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .auth-form-panel .show-password-label input {
+            cursor: pointer;
+            margin: 0;
+            width: auto;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .auth-form-panel .forgot-password a {
+            font-size: .85rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-form-panel .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
         .auth-footer {
             margin-top: 20px;
             text-align: center;
@@ -141,19 +177,28 @@
 
         <!-- Left decorative panel -->
         <div class="auth-panel">
-            <div class="brand">💰</div>
+            <div class="brand"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></div>
             <h2>ExpenseTracker</h2>
             <p>Track your spending,<br>manage your budgets,<br>and reach your financial goals.</p>
         </div>
 
         <!-- Right form -->
         <div class="auth-form-panel">
-            <h1>Welcome back 👋</h1>
+            <h1>Welcome back </h1>
             <p class="sub">Sign in to your account</p>
 
             <form id="loginForm">
                 <input type="email" id="email" placeholder="Email address" required>
                 <input type="password" id="password" placeholder="Password" required>
+                <div class="form-options">
+                    <label class="show-password-label">
+                        <input type="checkbox" id="showPasswordToggle"> Show password
+                    </label>
+                    <div class="forgot-password">
+                        <a href="forgot-password.html">Forgot password?</a>
+                    </div>
+                </div>
+
                 <div id="message" class="message"></div>
                 <button type="submit" class="btn btn-primary btn-full">Sign In</button>
             </form>
@@ -202,6 +247,11 @@
                 btn.disabled = false;
                 btn.textContent = "Sign In";
             }
+        });
+
+        document.getElementById("showPasswordToggle").addEventListener("change", function() {
+            const pwdInput = document.getElementById("password");
+            pwdInput.type = this.checked ? "text" : "password";
         });
     </script>
 

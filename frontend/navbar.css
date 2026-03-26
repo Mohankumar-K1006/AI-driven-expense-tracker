@@ -9,7 +9,9 @@
     left: 0;
     right: 0;
     height: var(--navbar-h);
-    background: var(--surface);
+    background: rgba(30, 41, 59, 0.85); /* surface with opacity */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
     display: flex;
@@ -96,20 +98,20 @@
     gap: 6px;
     padding: 8px 16px;
     border-radius: var(--radius-sm);
-    border: 1.5px solid var(--border);
-    background: transparent;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
     font-family: var(--font);
     font-size: .875rem;
     font-weight: 600;
     color: var(--text-muted);
     cursor: pointer;
-    transition: border-color .2s, color .2s, background .2s;
+    transition: all .2s;
 }
 
 .navbar-logout:hover {
     border-color: var(--danger);
     color: var(--danger);
-    background: #fff0f0;
+    background: rgba(239, 68, 68, 0.1);
 }
 
 /* ── Hamburger (hidden on desktop) ── */
@@ -158,9 +160,11 @@
     top: var(--navbar-h);
     left: 0;
     right: 0;
-    background: var(--surface);
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-lg);
     z-index: 999;
     padding: 12px 20px 16px;
     flex-direction: column;
@@ -207,8 +211,8 @@
     margin-top: 8px;
     padding: 12px 14px;
     border-radius: var(--radius-sm);
-    border: none;
-    background: #fff0f0;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
     font-family: var(--font);
     font-size: .95rem;
     font-weight: 600;
@@ -217,10 +221,14 @@
     text-align: left;
     width: 100%;
     transition: background .2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .mobile-menu-logout:hover {
-    background: #fecaca;
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--danger);
 }
 
 /* ── Responsive ── */
