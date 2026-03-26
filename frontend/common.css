@@ -4,23 +4,23 @@
 
 /* ── CSS Variables ── */
 :root {
-    --primary: #6366f1;       /* vibrant indigo */
-    --primary-dark: #4f46e5;
-    --primary-light: rgba(99, 102, 241, 0.15);
+    --primary: #3b82f6;       /* professional blue */
+    --primary-dark: #2563eb;
+    --primary-light: rgba(59, 130, 246, 0.15);
     
-    --accent: #14b8a6;        /* vibrant teal */
+    --accent: #8b5cf6;        /* elegant violet */
     --success: #10b981;
     --danger: #ef4444;
     --warning: #f59e0b;
 
-    --bg: #0f172a;            /* sleek dark slate */
-    --surface: #1e293b;       /* slightly lighter slate */
-    --surface-2: #334155;     /* mid slate */
-    --border: #334155;        /* dark border */
+    --bg: #09090b;            /* pitch dark zinc */
+    --surface: #18181b;       /* dark zinc surface */
+    --surface-2: #27272a;     /* mid zinc */
+    --border: #27272a;        /* dark border */
 
-    --text: #f8fafc;          /* off-white text */
-    --text-muted: #94a3b8;    /* muted gray text */
-    --text-light: #cbd5e1;
+    --text: #fafafa;          /* off-white text */
+    --text-muted: #a1a1aa;    /* muted gray text */
+    --text-light: #e4e4e7;
 
     --radius-sm: 8px;
     --radius-md: 14px;

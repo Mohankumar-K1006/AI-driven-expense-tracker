@@ -9,7 +9,7 @@
     left: 0;
     right: 0;
     height: var(--navbar-h);
-    background: rgba(30, 41, 59, 0.85); /* surface with opacity */
+    background: rgba(24, 24, 27, 0.85); /* surface with opacity */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
@@ -160,7 +160,7 @@
     top: var(--navbar-h);
     left: 0;
     right: 0;
-    background: rgba(30, 41, 59, 0.95);
+    background: rgba(24, 24, 27, 0.95);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
