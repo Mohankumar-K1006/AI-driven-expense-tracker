@@ -9,10 +9,6 @@
     <link rel="stylesheet" href="navbar.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        .page-content {
-            padding: calc(var(--navbar-h) + 28px) 20px 48px;
-        }
-
         .analytics-wrap {
             max-width: 960px;
             margin: 0 auto;
@@ -240,9 +236,9 @@
                         datasets: [{
                             data: amounts,
                             backgroundColor: [
-                                '#6366f1', '#06b6d4', '#10b981', '#f59e0b',
-                                '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6',
-                                '#f97316', '#84cc16'
+                                '#2563eb', '#06b6d4', '#059669', '#d97706',
+                                '#dc2626', '#7c3aed', '#ec4899', '#14b8a6',
+                                '#ea580c', '#65a30d'
                             ],
                             borderWidth: 2,
                             borderColor: '#fff'
@@ -289,7 +285,7 @@
                         datasets: [{
                             label: "Expenses (₹)",
                             data: data.map(d => d.expense),
-                            backgroundColor: '#6366f1',
+                            backgroundColor: '#2563eb',
                             borderRadius: 6,
                             maxBarThickness: 48
                         }]
@@ -337,13 +333,13 @@
                             {
                                 label: "Income",
                                 data: data.map(d => d.income),
-                                backgroundColor: '#10b981',
+                                backgroundColor: '#059669',
                                 borderRadius: 4,
                             },
                             {
                                 label: "Expense",
                                 data: data.map(d => d.expense),
-                                backgroundColor: '#ef4444',
+                                backgroundColor: '#dc2626',
                                 borderRadius: 4,
                             }
                         ]
