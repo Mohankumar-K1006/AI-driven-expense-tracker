@@ -14,6 +14,15 @@ const forumPostSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    community: {
+        type: String,
+        enum: ["general", "budgeting", "investing", "savings", "tips"],
+        default: "general"
+    },
+    tags: [{
+        type: String,
+        trim: true
+    }],
     likes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"

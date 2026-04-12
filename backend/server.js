@@ -11,6 +11,7 @@ const analyticsRoutes = require("./routes/analyticsRoutes");
 const profileRoutes = require("./routes/profile");
 const exportRoutes = require("./routes/exportRoutes");
 const forumRoutes = require("./routes/forumRoutes");
+const suggestionsRoutes = require("./routes/suggestionsRoutes");
 const app = express();
 
 // ✅ Allow frontend (Live Server)
@@ -28,6 +29,7 @@ app.use("/api/analytics", analyticsRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/export", exportRoutes);
 app.use("/api/forum", forumRoutes);
+app.use("/api/suggestions", suggestionsRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("MongoDB Connected"))
