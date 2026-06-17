@@ -1,0 +1,65 @@
+/* ── Set Budget Page Styles ── */
+.set-budget-card {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.budget-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.budget-cat-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    animation: fadeInUp .3s ease both;
+}
+
+.budget-cat-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.budget-cat-row .remove-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 8px;
+    border-radius: var(--radius-sm);
+    transition: background .15s, color .15s;
+    display: flex;
+    align-items: center;
+    margin-bottom: 2px;
+}
+
+.budget-cat-row .remove-btn:hover {
+    background: #fee2e2;
+    color: var(--danger);
+}
+
+.add-cat-btn {
+    background: none;
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    width: 100%;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: .9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: border-color .2s, color .2s;
+}
+
+.add-cat-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}

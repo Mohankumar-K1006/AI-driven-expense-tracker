@@ -430,7 +430,7 @@
         /* ── Load AI Suggestions ── */
         async function loadSuggestions() {
             try {
-                const res = await fetch("http://localhost:5000/api/suggestions", {
+                const res = await fetch("http://localhost:8080/api/suggestions", {
                     headers: { "Authorization": token }
                 });
                 const suggestions = await res.json();
@@ -462,7 +462,7 @@
         /* ── Load Summary ── */
         async function loadSummary() {
             try {
-                const res = await fetch("http://localhost:5000/api/transactions/summary", {
+                const res = await fetch("http://localhost:8080/api/transactions/summary", {
                     headers: { "Authorization": token }
                 });
                 const data = await res.json();
@@ -477,7 +477,7 @@
         /* ── Load Transactions ── */
         async function loadTransactions() {
             try {
-                const res = await fetch("http://localhost:5000/api/transactions/all", {
+                const res = await fetch("http://localhost:8080/api/transactions/all", {
                     headers: { "Authorization": token }
                 });
                 const transactions = await res.json();
@@ -554,7 +554,7 @@
         async function deleteTx(id) {
             if (!confirm("Delete this transaction?")) return;
             try {
-                await fetch(`http://localhost:5000/api/transactions/${id}`, {
+                await fetch(`http://localhost:8080/api/transactions/${id}`, {
                     method: "DELETE",
                     headers: { "Authorization": token }
                 });
@@ -587,12 +587,12 @@
             };
 
             try {
-                let url = "http://localhost:5000/api/transactions/add";
+                let url = "http://localhost:8080/api/transactions/add";
                 let method = "POST";
 
                 if (isEditing) {
                     const id = document.getElementById("editTxId").value;
-                    url = `http://localhost:5000/api/transactions/${id}`;
+                    url = `http://localhost:8080/api/transactions/${id}`;
                     method = "PUT";
                 }
 
@@ -636,7 +636,7 @@
 
         async function loadCharts() {
             try {
-                const catRes = await fetch("http://localhost:5000/api/analytics/category", {
+                const catRes = await fetch("http://localhost:8080/api/analytics/category", {
                     headers: { "Authorization": token }
                 });
                 const catData = await catRes.json();
@@ -663,7 +663,7 @@
                     });
                 }
 
-                const monRes = await fetch("http://localhost:5000/api/analytics/monthly", {
+                const monRes = await fetch("http://localhost:8080/api/analytics/monthly", {
                     headers: { "Authorization": token }
                 });
                 const monData = await monRes.json();

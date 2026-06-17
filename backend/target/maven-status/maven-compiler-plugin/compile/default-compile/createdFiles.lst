@@ -1,0 +1,6 @@
+com\expensetracker\controller\BudgetController.class
+com\expensetracker\controller\ForumController.class
+com\expensetracker\controller\SavingsController.class
+com\expensetracker\controller\ExportController.class
+com\expensetracker\controller\ProfileController.class
+com\expensetracker\controller\SuggestionController.class

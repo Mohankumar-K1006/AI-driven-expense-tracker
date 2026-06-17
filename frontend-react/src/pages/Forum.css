@@ -1,0 +1,255 @@
+/* ── Forum Page Styles ── */
+.forum-layout {
+    max-width: 920px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 20px;
+}
+
+/* Communities sidebar */
+.communities-card {
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.communities-card h3 {
+    font-size: .95rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.community-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.community-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: .85rem;
+    color: var(--text-muted);
+    transition: background .15s, color .15s;
+    text-align: left;
+}
+
+.community-btn:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.community-btn.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.community-btn .count {
+    font-size: .75rem;
+    background: var(--border);
+    padding: 2px 8px;
+    border-radius: 99px;
+}
+
+/* Posts */
+.forum-main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.new-post-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.new-post-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.post-card {
+    padding: 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    animation: fadeInUp .3s ease both;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.post-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: .8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.post-author {
+    font-weight: 600;
+    font-size: .9rem;
+}
+
+.post-date {
+    font-size: .8rem;
+    color: var(--text-muted);
+}
+
+.post-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.post-content {
+    font-size: .9rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.post-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.post-tag {
+    font-size: .75rem;
+    padding: 2px 10px;
+    border-radius: 99px;
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.post-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.post-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: .85rem;
+    color: var(--text-muted);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    transition: background .15s, color .15s;
+}
+
+.post-action-btn:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.post-action-btn.liked {
+    color: var(--danger);
+}
+
+/* Comments */
+.comments-section {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.comment-item {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+}
+
+.comment-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .65rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.comment-body {
+    flex: 1;
+}
+
+.comment-body .c-name {
+    font-weight: 600;
+    font-size: .8rem;
+}
+
+.comment-body .c-text {
+    font-size: .85rem;
+    color: var(--text-light);
+}
+
+.comment-body .c-date {
+    font-size: .75rem;
+    color: var(--text-muted);
+}
+
+.comment-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.comment-form input {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: .85rem;
+}
+
+.comment-form .btn {
+    padding: 8px 16px;
+    font-size: .8rem;
+}
+
+@media (max-width: 768px) {
+    .forum-layout {
+        grid-template-columns: 1fr;
+    }
+    .communities-card {
+        position: static;
+    }
+}

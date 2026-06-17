@@ -186,7 +186,7 @@
 
         async function loadBudget() {
             try {
-                const res = await fetch("http://localhost:5000/api/budget/analysis", {
+                const res = await fetch("http://localhost:8080/api/budget/analysis", {
                     headers: { "Authorization": token }
                 });
                 const data = await res.json();

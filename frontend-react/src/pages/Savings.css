@@ -1,0 +1,87 @@
+/* ── Savings Page Styles ── */
+.savings-grid {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.savings-form-card {
+    margin-bottom: 8px;
+}
+
+.savings-form-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.savings-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.savings-form-row .form-group {
+    margin-bottom: 0;
+}
+
+.goal-card {
+    padding: 20px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    animation: fadeInUp .3s ease both;
+}
+
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.goal-header .goal-title {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.goal-header .goal-pct {
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.goal-amounts {
+    font-size: .85rem;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+}
+
+.goal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    align-items: center;
+}
+
+.goal-actions input {
+    width: 120px;
+    padding: 8px 12px;
+    font-size: .85rem;
+}
+
+.goal-actions .btn {
+    padding: 8px 16px;
+    font-size: .8rem;
+}
+
+@media (max-width: 540px) {
+    .savings-form-row { grid-template-columns: 1fr; }
+}

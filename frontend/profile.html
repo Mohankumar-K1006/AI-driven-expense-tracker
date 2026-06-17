@@ -162,7 +162,7 @@
         /* ── Load Profile ── */
         async function loadProfile() {
             try {
-                const res = await fetch("http://localhost:5000/api/profile", {
+                const res = await fetch("http://localhost:8080/api/profile", {
                     headers: { "Authorization": token }
                 });
                 const data = await res.json();
@@ -192,7 +192,7 @@
             btn.textContent = "Saving…";
 
             try {
-                const res = await fetch("http://localhost:5000/api/profile", {
+                const res = await fetch("http://localhost:8080/api/profile", {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",

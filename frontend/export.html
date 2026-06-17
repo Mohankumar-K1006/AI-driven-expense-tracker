@@ -149,12 +149,12 @@
 
         document.getElementById("csvBtn").addEventListener("click", (e) => {
             e.preventDefault();
-            downloadFile("http://localhost:5000/api/export/csv", "transactions.csv");
+            downloadFile("http://localhost:8080/api/export/csv", "transactions.csv");
         });
 
         document.getElementById("pdfBtn").addEventListener("click", (e) => {
             e.preventDefault();
-            downloadFile("http://localhost:5000/api/export/pdf", "transactions.pdf");
+            downloadFile("http://localhost:8080/api/export/pdf", "transactions.pdf");
         });
     </script>
 

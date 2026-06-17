@@ -1,0 +1,65 @@
+/* ── Analytics Page Styles ── */
+.analytics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 920px;
+    margin: 0 auto;
+}
+
+.analytics-grid .card {
+    animation: fadeInUp .4s ease both;
+}
+
+.analytics-grid .card:nth-child(1) { animation-delay: 0s; }
+.analytics-grid .card:nth-child(2) { animation-delay: .1s; }
+.analytics-grid .card:nth-child(3) { animation-delay: .2s; }
+.analytics-grid .card:nth-child(4) { animation-delay: .3s; }
+
+.analytics-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+.analytics-grid h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.summary-item {
+    text-align: center;
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+}
+
+.summary-item .s-label {
+    font-size: .8rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.summary-item .s-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.summary-item .s-value.income { color: var(--success); }
+.summary-item .s-value.expense { color: var(--danger); }
+.summary-item .s-value.balance { color: var(--primary); }
+
+@media (max-width: 640px) {
+    .analytics-grid { grid-template-columns: 1fr; }
+    .summary-cards { grid-template-columns: 1fr; }
+}

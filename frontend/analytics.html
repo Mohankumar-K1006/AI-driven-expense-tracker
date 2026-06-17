@@ -200,7 +200,7 @@
         /* ── Load Summary ── */
         async function loadSummary() {
             try {
-                const res = await fetch("http://localhost:5000/api/analytics/summary", {
+                const res = await fetch("http://localhost:8080/api/analytics/summary", {
                     headers: { Authorization: token }
                 });
                 const data = await res.json();
@@ -215,7 +215,7 @@
         /* ── Pie Chart (Category-wise) ── */
         async function loadCategoryChart() {
             try {
-                const res = await fetch("http://localhost:5000/api/analytics/category", {
+                const res = await fetch("http://localhost:8080/api/analytics/category", {
                     headers: { Authorization: token }
                 });
                 const data = await res.json();
@@ -267,7 +267,7 @@
         /* ── Bar Chart (Monthly Trend) ── */
         async function loadMonthlyChart() {
             try {
-                const res = await fetch("http://localhost:5000/api/analytics/monthly", {
+                const res = await fetch("http://localhost:8080/api/analytics/monthly", {
                     headers: { Authorization: token }
                 });
                 const data = await res.json();
@@ -314,7 +314,7 @@
         /* ── Grouped Bar Chart (Income vs Expense) ── */
         async function loadComparisonChart() {
             try {
-                const res = await fetch("http://localhost:5000/api/analytics/income-vs-expense", {
+                const res = await fetch("http://localhost:8080/api/analytics/income-vs-expense", {
                     headers: { Authorization: token }
                 });
                 const data = await res.json();

@@ -150,7 +150,7 @@
         /* ── Pre-fill existing budget ── */
         async function prefillBudget() {
             try {
-                const res = await fetch("http://localhost:5000/api/budget/analysis", {
+                const res = await fetch("http://localhost:8080/api/budget/analysis", {
                     headers: { "Authorization": token }
                 });
                 const data = await res.json();
@@ -190,7 +190,7 @@
             ];
 
             try {
-                const res = await fetch("http://localhost:5000/api/budget/set", {
+                const res = await fetch("http://localhost:8080/api/budget/set", {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "Authorization": token },
                     body: JSON.stringify({ categories })

@@ -442,7 +442,7 @@
         /* Load community counts */
         async function loadCommunityCounts() {
             try {
-                const res = await fetch("http://localhost:5000/api/forum/communities", {
+                const res = await fetch("http://localhost:8080/api/forum/communities", {
                     headers: { "Authorization": token }
                 });
                 const communities = await res.json();
@@ -482,8 +482,8 @@
         async function loadFeed() {
             try {
                 const url = activeCommunity === "all"
-                    ? "http://localhost:5000/api/forum"
-                    : `http://localhost:5000/api/forum?community=${activeCommunity}`;
+                    ? "http://localhost:8080/api/forum"
+                    : `http://localhost:8080/api/forum?community=${activeCommunity}`;
 
                 const res = await fetch(url, {
                     headers: { "Authorization": token }
@@ -591,7 +591,7 @@
             msgEl.textContent = "";
 
             try {
-                const res = await fetch("http://localhost:5000/api/forum", {
+                const res = await fetch("http://localhost:8080/api/forum", {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "Authorization": token },
                     body: JSON.stringify({
@@ -622,7 +622,7 @@
         /* ── Toggle Like ── */
         async function toggleLike(postId, btnEl) {
             try {
-                const res = await fetch(`http://localhost:5000/api/forum/${postId}/like`, {
+                const res = await fetch(`http://localhost:8080/api/forum/${postId}/like`, {
                     method: "PUT",
                     headers: { "Authorization": token }
                 });
@@ -661,7 +661,7 @@
             btn.disabled = true;
 
             try {
-                const res = await fetch(`http://localhost:5000/api/forum/${postId}/comment`, {
+                const res = await fetch(`http://localhost:8080/api/forum/${postId}/comment`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "Authorization": token },
                     body: JSON.stringify({ text })
